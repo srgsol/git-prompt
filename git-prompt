@@ -86,6 +86,7 @@ fi
 GIT_PROMPT=${GIT_PROMPT:-1}
 GIT_AUTOFETCH=${GIT_AUTOFETCH:-1}
 GIT_AUTOFETCH_INTERVAL=${GIT_AUTOFETCH_INTERVAL:-600}
+GIT_BRANCH_MAX_LENGTH=${GIT_BRANCH_MAX_LENGTH:-30}
 GIT_ONLINE=1
 GIT_SSH_AGENT_STORED=0
 
@@ -239,8 +240,15 @@ __git_prompt() {
 		GIT_PATH+=${BASH_REMATCH[1]}
 	    fi
 
+	    # Trim branch name if longer than GIT_BRANCH_MAX_LENGTH
+	    local DISPLAY_BRANCH=$GIT_BRANCH
+	    if [[ ${#GIT_BRANCH} -gt $GIT_BRANCH_MAX_LENGTH ]]; then
+		local TRIM_TO=$((GIT_BRANCH_MAX_LENGTH - 3))
+		DISPLAY_BRANCH="${GIT_BRANCH:0:$TRIM_TO}..."
+	    fi
+
 	    # Prompt git branch.
-	    PS1+="${Branch_color}$GIT_BRANCH${Color_Off}"
+	    PS1+="${Branch_color}$DISPLAY_BRANCH${Color_Off}"
 
 	    # Prompt sync status.
 	    if [[ $GIT_UPSTREAM != "" ]]; then
