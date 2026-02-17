@@ -184,7 +184,7 @@ __git_prompt() {
 			# This avoids constant retries when offline.
 			GIT_LAST_FETCH=$(date '+%s')
 			# Overwrite line with full prompt.
-			printf "\r"
+			printf "\r\033[K"
 		    fi
 		fi
 
